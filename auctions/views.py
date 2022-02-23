@@ -16,9 +16,10 @@ class newListingForm(forms.Form):
     category = forms.CharField(label="Category", required=False)   # could change this to a choice field if we want
     image = forms.URLField(label="Image URL", required=False)
 
-
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = models.Listing.objects.all()
+    context = {"listings": listings}
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):
@@ -82,6 +83,7 @@ def createListing(request):
             if k != "csrfmiddlewaretoken":
                 data[k] = request.POST[k]
         listing = models.Listing(**data)  # can you pass a dictionary in? or do I have to pass in each field individually? YES! If we use **
+        listing.currentBid = listing.startingBid
         listing.save()
         return(HttpResponseRedirect(reverse("index")))
 
@@ -91,3 +93,6 @@ def createListing(request):
         return render(request, "auctions/newListing.html", context)
 
 
+def categories(request):
+    # TODO
+    pass

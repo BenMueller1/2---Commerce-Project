@@ -3,5 +3,24 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+
+    <!-- might be better to make these columns in bootstrap, would look nicer -->
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <ul>
+                    <li>Title: <a href="">{{listing.title}}</a></li>
+                    {% if listing.image != '' %}  <!-- check if the image exists before we try to display it -->
+                        <li><img src="{{listing.image}}" height="100" width="100"></li>
+                    {% endif %}    
+                    <li><h5>Category: {{listing.category}}</h5></li>
+                    <li><h5>Starting Bid: {{listing.startingBid}}</h5></li>
+                    <li>Description: {{listing.description}}</li>
+                </ul>
+            </li>
+            
+        {% endfor %}
+    </ul>
+
+
 {% endblock %}
