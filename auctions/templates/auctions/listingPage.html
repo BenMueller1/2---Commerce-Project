@@ -1,0 +1,60 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+
+
+{% block body %}
+    <h2>Listing Title: {{listing.title}}</h2>
+
+    <ul>
+        {% if listing.image != '' %}  <!-- check if the image exists before we try to display it -->
+            <li><img src="{{listing.image}}" height="100" width="100"></li>
+        {% endif %}    
+        <li><h5>Category: {{listing.category}}</h5></li>
+        <li><h5>Current Bid: {{listing.currentBid}}</h5></li>
+        <li>Description: {{listing.description}}</li>
+    </ul>
+
+    {% if listing.active %}
+        <form action="" method="POST"> 
+            {% csrf_token %}
+            <input type="hidden" name="addToWishList" value="addToWishList"> 
+            <button type="submit"> Add to Wishlist </button>
+        </form>
+
+        <form action="" method="POST"> 
+            {% csrf_token %}
+            {{bidForm}}
+            <button type="submit"> Place bid </button>
+        </form>
+    
+    {% comment %} 
+    {% else %}
+        {% if %}   <!-- how do I get the current user??? -->
+            <!-- if user created the auction, give them the option to close the auction -->
+        {% else %}
+            <!-- say who has won the auction  (if it has been closed the winner was the most recent highest bid) -->
+    {% endcomment %}
+    
+    {% endif %}
+
+    <!-- display all comments (this works!)-->    
+    <h4> Comments: </h4>
+    <ul>
+    {% for comment in comments.all %}
+        <li><ul>
+            <li>{{comment.user}}</li>
+            <li>{{comment.title}}</li>
+            <li>{{comment.text}}
+        </ul></li>
+    {% endfor %}
+    </ul>
+
+    <form action="" method="POST"> 
+        {% csrf_token %}
+        {{commentForm}}
+        <button type="submit"> Add a Comment </button>
+    </form>
+
+
+{% endblock %}

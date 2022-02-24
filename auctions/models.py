@@ -2,9 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib import admin
 
-class User(AbstractUser):
-    pass
 
+
+class Comment(models.Model):
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True)
+    title = models.CharField(max_length=100, default="comment title")
+    text = models.TextField()
 
 class Listing(models.Model):
     title = models.CharField(max_length=100)
@@ -14,6 +17,20 @@ class Listing(models.Model):
     image = models.URLField()
     currentBid = models.FloatField()
 
+    highestBidder = models.OneToOneField("User", on_delete=models.DO_NOTHING, null = True, related_name="highestBidder")
+    creator = models.OneToOneField("User", on_delete=models.CASCADE, null=True, related_name="creator")
+    active = models.BooleanField(default=True)
+    winner = models.OneToOneField("User", on_delete=models.DO_NOTHING, null=True, related_name="winner")
+    comments = models.ManyToManyField(Comment, null=True)
+
+
+class User(AbstractUser):
+    watchlist = models.ManyToManyField(Listing, null=True)
+
 
 admin.site.register(Listing)
 admin.site.register(User)
+admin.site.register(Comment)
+
+
+
