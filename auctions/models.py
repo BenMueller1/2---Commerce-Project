@@ -17,10 +17,10 @@ class Listing(models.Model):
     image = models.URLField()
     currentBid = models.FloatField()
 
-    highestBidder = models.OneToOneField("User", on_delete=models.DO_NOTHING, null = True, related_name="highestBidder")
-    creator = models.OneToOneField("User", on_delete=models.CASCADE, null=True, related_name="creator")
+    highestBidder = models.ForeignKey("User", on_delete=models.DO_NOTHING, null = True, related_name="highestBidder")
+    creator = models.ForeignKey("User", on_delete=models.CASCADE, null=True, related_name="creator")
     active = models.BooleanField(default=True)
-    winner = models.OneToOneField("User", on_delete=models.DO_NOTHING, null=True, related_name="winner")
+    winner = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, related_name="winner")
     comments = models.ManyToManyField(Comment, null=True)
 
 

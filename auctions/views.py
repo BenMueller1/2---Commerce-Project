@@ -24,6 +24,7 @@ class newCommentForm(forms.Form):
     comment = forms.CharField(label="New Comment: ", widget=forms.Textarea(attrs={"rows":5, "cols":30}))
     title = forms.CharField(label= "Comment Title: ")
 
+
 def index(request):
     listings = models.Listing.objects.all()
     context = {"listings": listings}
@@ -140,14 +141,22 @@ def listingPage(request, listingId):
             newComment = models.Comment(user=request.user, title=request.POST['title'], text=request.POST['comment'])
             newComment.save()   # this is causing an error
             listing.comments.add(newComment)
+            listing.save()
 
         elif "bid" in post_request_keys:
             if float(request.POST['bid']) > listing.currentBid:
                 listing.currentBid = request.POST['bid']
                 listing.highestBidder = request.user
+                listing.save()
 
         elif "addToWishList" in post_request_keys:
             request.user.watchlist.add(listing)
+            request.user.save()
+
+        elif "closeListing" in post_request_keys:
+            listing.active = False
+            listing.winner = listing.highestBidder
+            listing.save()
 
 
     if len(models.Listing.objects.filter(id=listingId)) == 0:
@@ -156,6 +165,6 @@ def listingPage(request, listingId):
     
     bidForm = newBidForm()
     commentForm = newCommentForm()
-    context = {"listing": listing, "bidForm":bidForm, "commentForm": commentForm, "comments":listing.comments}
+    context = {"listing": listing, "bidForm":bidForm, "commentForm": commentForm, "comments":listing.comments, "user": request.user}
 
     return render(request, "auctions/listingPage.html", context)

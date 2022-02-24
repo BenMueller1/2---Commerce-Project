@@ -14,7 +14,7 @@
         <li><h5>Current Bid: {{listing.currentBid}}</h5></li>
         <li>Description: {{listing.description}}</li>
     </ul>
-
+    
     {% if listing.active %}
         <form action="" method="POST"> 
             {% csrf_token %}
@@ -27,17 +27,20 @@
             {{bidForm}}
             <button type="submit"> Place bid </button>
         </form>
-    
-    {% comment %} 
-    {% else %}
-        {% if %}   <!-- how do I get the current user??? -->
-            <!-- if user created the auction, give them the option to close the auction -->
-        {% else %}
-            <!-- say who has won the auction  (if it has been closed the winner was the most recent highest bid) -->
-    {% endcomment %}
-    
-    {% endif %}
 
+        {% if user.id == listing.creator_id %}
+            <h1>TEST</h1>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="closeListing" value="closeListing"> 
+                <button type="submit"> Close Listing </button>
+            </form>
+        {% endif %}
+    
+    {% else %}
+        <h4>{{listing.highestBidder}} has won the auction for this listing.</h4>
+    {% endif %}
+    
     <!-- display all comments (this works!)-->    
     <h4> Comments: </h4>
     <ul>
